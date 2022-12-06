@@ -1,0 +1,47 @@
+<h1>Login Page</h1>
+
+<form class="row g-3 needs-validation" id="loginForm">
+    <div class="col-12">
+      <div class="input-group has-validation">
+        <input type="text" name="username" class="form-control" id="username" placeholder="ID">
+      </div>
+    </div>
+    <div class="col-12 mb-3">
+      <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+    </div>
+    <div class="col-12">
+      <button type="button" id="btn-login">Login</button>
+    </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+<script src="/static/js/jwt.js"></script>
+<script>
+    let auth = authentication();
+    if(auth){
+        location.reload();
+    }
+    const btn_login = document.getElementById("btn-login");
+    btn_login.addEventListener("click", function(){
+        const data =new FormData(document.getElementById("loginForm"));
+        $.ajax({
+            type: "POST",
+            url: "/api/login/",
+            data: data,
+            enctype: "multipart/form-data", //form data 설정
+            processData: false, //프로세스 데이터 설정 : false 값을 해야 form data로 인식
+            contentType: false, //헤더의 Content-Type을 설정 : false 값을 해야 form data로 인식
+            async: false,
+            success: function(data) {
+                console.log(data.user);
+                console.log(JSON.stringify(data));
+                setCookie("access_token", data.jwt_token.access_token, tokenPayload(data.jwt_token.access_token).exp);
+                setCookie("refresh_token_index_id", data.jwt_token.refresh_token_index_id, data.jwt_token.refresh_token_exp);
+            },
+            error: function(error) {
+                alert("아이디 또는 비밀번호를 잘못 입력했습니다. \n입력하신 내용을 다시 확인해주세요.");
+            },
+        });
+    })
+
+</script>

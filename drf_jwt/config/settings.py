@@ -41,6 +41,8 @@ INSTALLED_APPS = [
 	'rest_framework_simplejwt.token_blacklist',
 
     'api',
+    'system_manage',
+    'website',
 ]
 
 MIDDLEWARE = [
@@ -146,7 +148,7 @@ REST_FRAMEWORK = {
 REST_USE_JWT = True
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days = 1, hours=0, minutes=0),
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days = 0, hours=6, minutes=0),
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days = 60, hours=0, minutes=0),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
