@@ -1,3 +1,5 @@
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
 function authentication(){
     let access_token = getCookie("access_token");
     let refresh_token_index_id = getCookie("refresh_token_index_id");
@@ -103,4 +105,30 @@ function delCookie(key){
 
 function boolCheckCookie(key) {
     return getCookie(key) != '' ? true : false;
+}
+
+function logout(){
+    if (!confirm("로그아웃 하시겠습니까?")) {
+        return false;
+    }
+    let access_token = getCookie("access_token");
+    let refresh_token_index_id = getCookie("refresh_token_index_id");
+    $.ajax({
+        type: "POST",
+        url: "/api/logout/",
+        headers: {
+            'Authorization': `Bearer ${access_token}`,
+        },
+        data: {
+            "refresh_token_index_id" : refresh_token_index_id
+        },
+        datatype: "JSON",
+        success: function(data) {
+            resetToken();
+            location.reload();
+        },
+        error: function(error) {
+            alert(error.responseJSON);
+        },
+    });
 }

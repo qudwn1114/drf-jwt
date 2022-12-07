@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 
 
 class HomeView(View):
-    @method_decorator(login_required(redirect_url='/login'))
+    @method_decorator(login_required(redirect_url='system_manage:login'))
     def get(self, request: HttpRequest, *args, **kwargs):
         context = {}
         access_token = request.COOKIES.get("access_token", None)
@@ -15,14 +15,3 @@ class HomeView(View):
         context['user'] = user
 
         return render(request, 'home.html', context)
-
-
-class LoginView(View):
-    @method_decorator(logout_required(redirect_url='/'))
-    def get(self, request: HttpRequest, *args, **kwargs):
-        context = {}
-        access_token = request.COOKIES.get("access_token", None)
-        user = getTokenUser(token=access_token)
-        context['user'] = user
-
-        return render(request, 'login.html', context)

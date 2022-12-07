@@ -157,3 +157,12 @@ SIMPLE_JWT = {
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
 }
+
+EMAIL_HOST = config['EMAILS']['EMAIL_HOST'] 		 # 메일 호스트 서버
+EMAIL_PORT = config['EMAILS']['EMAIL_PORT'] 			 # 서버 포트
+EMAIL_HOST_USER = config['EMAILS']['EMAIL_HOST_USER'] 	 # 메일
+EMAIL_HOST_PASSWORD = config['EMAILS']['EMAIL_HOST_PASSWORD']		 # Password
+EMAIL_USE_TLS = True			 # TLS 보안 설정
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER	 # 응답 메일 관련 설정
+
+BROKER = config['BROKER']

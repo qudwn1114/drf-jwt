@@ -1,0 +1,153 @@
+{% extends "layouts/system_base.html" %}
+{% load static %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
+{% endblock stylesheets %}
+
+{% block main %}
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Access Manage</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'system_manage:home' %}">Home</a></li>
+            <li class="breadcrumb-item">Access Manage</li>
+            <li class="breadcrumb-item active">User</li>
+          </ol>
+        </nav>
+    </div><!-- End Page Title -->
+  
+      <section class="section">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Access Manage</h5>
+            <p>그룹을 생성 및 삭제하고 그룹의 권한을 관리할 수 있습니다.</p>
+            <div>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal_create_group" onclick="clearCreationModal();">Create Group</button>
+            </div>
+          </div>
+        </div>
+        <div class="card" >
+          <div class="card-header">
+            <b>상세 검색</b>
+          </div>
+          <div class="card-body">
+            <div class='row mb-3 mt-3'>
+                <div id='divGroupsSelect' class='col-md-3'>
+                  <select id='groupsSelect' class="form-control selectpicker" data-style-base='form-control' data-style='' data-live-search="true" title="사용자 그룹을 지정하세요." name='groups' onchange="getGroupPermissionList();">
+                      {% if groups %}
+                          {% for group in groups %}
+                          <option value="{{ group.id }}" {% if selected_group == group %} selected {% endif %}>{{ group.name }}</option>
+                          {% endfor %}
+                      {% endif %}
+                  </select>
+                </div>
+                <button type="button" id='btn_grp_delete' class='btn btn-danger ml-3 col-md-2' onclick="deleteGroup('{{selected_group.id}}');">그룹 삭제</button>
+            </div>
+            {% if selected_group %}
+            <div class="row">
+                <form id="search-form" class="p-2" method="get" action="" onsubmit="return false">
+                    <input type="hidden" name="group_id" value="{{selected_group.id}}">
+                    <div class="row mb-2">
+                      <label for="item" class="col-sm-2 col-form-label">검색 분류</label>
+                      <div class="col-sm-8">
+                          <div class="input-group">                   
+                            <select class="form-select" id="search_type" name="search_type">
+                              {% if search_type == 'name' %}
+                              <option value="name" selected>권한 이름</option>
+                              {% else %}
+                              <option value="name">권한 이름</option>
+                              {% endif %}
+                              {% if search_type == 'codename' %}
+                              <option value="codename" selected>코드</option>
+                              {% else %}
+                              <option value="codename">코드</option>
+                              {% endif %}
+                            </select>
+                          <input class="form-control" type="text" id="search_keyword" name="search_keyword" placeholder="Search Keword" value="{{search_keyword}}" style="width:50%">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="text-center">
+                          <button type="submit" id="btn-search" class="btn btn-primary">검색</button>
+                          <a id="btn-initial" class="btn btn-outline-primary" href="{% url 'system_manage:access_manage' %}">초기화</a>
+                      </div>
+                    </div>
+                  </form>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row justify-content-between">
+                    <div class="col-auto">
+                      <h5 class="card-title">권한 목록</h5>
+                    </div>
+                </div>
+                <table class='table table-hover'>
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>권한 ID</th>
+                        <th>권한 이름</th>
+                        <th>Code</th>
+                        <th>Access Type</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% if page_obj %}
+                          {% for i in page_obj %}
+                          <tr>
+                            <td>
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" class="form-check-input" id="Perm{{ i.id }}"  onchange="setGroupPermission('{{ i.id }}', '{{selected_group.id}}')" {% if i.hasPerm == True %} checked {% endif %}>
+                                </div>
+                            </td>
+                            <td>{{ i.id }}</td>
+                            <td>{{ i.name }}</td>
+                            <td>{{ i.codename }}</td>
+                            <td>{{ i.content_type.app_label}}</td>
+                          </tr>
+                          {% endfor %}
+                      {% else %}
+                      <tr>
+                          <td colspan="5">데이터가 없습니다.</td>
+                      </tr>
+                      {% endif %}
+                    </tbody>
+                  </table>
+                  {% include 'admin_pagination.html' %}
+            </div>    
+        </div>
+      </section>
+      <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal_create_group" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">새 그룹(role) 생성</h4>
+                    <button aria-hidden="true" data-bs-dismiss="modal" class="close btn" type="button">&times;</button>
+                </div>
+                <div id='divCreateGroup' class="modal-body" align='right'>
+                  <input type="text" class="form-control" id="groupNameCreate" placeholder="그룹(role) 이름"/>
+                  <br>
+                  <br>
+                  <button type="button" class="btn btn-success" onclick="createGroup();">생성</button>
+                  
+                  <span id="error_msg" style="margin-left:20px;color:#FF6600;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js"></script>
+<script src="{% static 'js/pagination/script_pagination.js' %}"></script>
+<script src="{% static 'system/js/system_manage/script_group_manage.js' %}"></script>
+<script src="{% static 'system/js/system_manage/script_access_manage.js' %}"></script>
+{% endblock javascripts %}
