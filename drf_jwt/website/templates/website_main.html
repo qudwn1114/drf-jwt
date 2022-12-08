@@ -1,0 +1,24 @@
+{% extends "layouts/website_base.html" %}
+{% load static %}
+
+{% block main %}
+
+{% include 'includes/website/sections/hero.html' %}
+
+<main id="main" class="main">
+    {% include 'includes/website/sections/clients.html' %}
+    {% include 'includes/website/sections/about.html' %}
+    {% include 'includes/website/sections/counts.html' %}
+    {% include 'includes/website/sections/services.html' %}
+    {% include 'includes/website/sections/more_services.html' %}
+    {% include 'includes/website/sections/features.html' %}
+    {% include 'includes/website/sections/testimonials.html' %}
+    {% include 'includes/website/sections/portfolio.html' %}
+    {% include 'includes/website/sections/team.html' %}
+    {% include 'includes/website/sections/pricing.html' %}
+    {% include 'includes/website/sections/faq.html' %}
+    {% include 'includes/website/sections/contact.html' %}
+</main>
+{% endblock %}
+
+{% block javascripts %}{% endblock javascripts %}

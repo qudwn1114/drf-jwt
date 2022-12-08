@@ -1,0 +1,48 @@
+{% extends "layouts/website_base.html" %}
+{% load static %}
+
+{% block stylesheets %}
+<style>
+.btn-custom {
+  background: #3498db;
+  padding: 8px 25px;
+  margin-left: 30px;
+  border-radius: 50px;
+  color: #fff;
+}
+.btn-custom:hover {
+  color: #fff;
+  background: #4aa3df;
+}
+</style>
+{% endblock stylesheets %}
+
+
+{% block main %}
+<main id="main" class="main">
+    <!-- ======= Breadcrumbs Section ======= -->
+    <section class="breadcrumbs">
+        <div class="container">
+  
+          <div class="d-flex justify-content-between align-items-center">
+            <h2>Inner Page</h2>
+            <ol>
+              <li><a href="{% url 'website:home' %}">Home</a></li>
+              <li>Inner Page</li>
+            </ol>
+          </div>
+  
+        </div>
+      </section><!-- End Breadcrumbs Section -->
+  
+      <section class="inner-page">
+        <div class="container">
+          <p>
+            Example inner page template
+          </p>
+        </div>
+      </section>
+</main>
+{% endblock %}
+
+{% block javascripts %}{% endblock javascripts %}
